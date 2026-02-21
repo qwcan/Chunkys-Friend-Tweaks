@@ -64,26 +64,27 @@ public class LLLPatch
 
     private static ExtendedItem UpdateItemWeights(ExtendedItem extendedItem)
     {
-        UpdateList( extendedItem.name, extendedItem.LevelMatchingProperties.planetNames, 
+        string safeName = Plugin.SafeName(extendedItem.name);
+        UpdateList( safeName, extendedItem.LevelMatchingProperties.planetNames, 
             "Planet Weights",
              "A comma-separated list of moon names and scrap spawn weights for this item. For example, Experimentation:10,Vow:20 will make the item spawn twice as often on Experimentation as on Vow.");
         
-        UpdateList( extendedItem.name, extendedItem.LevelMatchingProperties.levelTags, 
+        UpdateList( safeName, extendedItem.LevelMatchingProperties.levelTags, 
             "Level Tag Weights",
             "A comma-separated list of level tags and scrap spawn weights for this item. For example, Vanilla:20 will make the item spawn with a weight of 20 on Vanilla levels.");
         
-        UpdateList( extendedItem.name, extendedItem.LevelMatchingProperties.currentWeather, 
+        UpdateList( safeName, extendedItem.LevelMatchingProperties.currentWeather, 
             "Current Weather Weights",
             "A comma-separated list of current weather and scrap spawn weights for this item. For example, Rainy:100 will make the item spawn with a weight of 100 when the current weather is Rainy.");
         
-        UpdateList( extendedItem.name, extendedItem.LevelMatchingProperties.modNames, 
+        //No idea if these two work or not
+        UpdateList( safeName, extendedItem.LevelMatchingProperties.modNames, 
             "Mod Name Weights",
             "A comma-separated list of mod names and scrap spawn weights for this item. For example, MinecraftInteriors:100 will make the item spawn with a weight of 100 on levels from the MinecraftInteriors mod.");
 
-        UpdateList( extendedItem.name, extendedItem.LevelMatchingProperties.authorNames, 
+        UpdateList( safeName, extendedItem.LevelMatchingProperties.authorNames, 
             "Author Name Weights",
             "A comma-separated list of author names and scrap spawn weights for this item. For example, qwcan:20 will make the item spawn with a weight of 20 on levels by the author qwcan.");
-
         
         return extendedItem;
     }
@@ -119,7 +120,7 @@ public class LLLPatch
                 }
                 catch (Exception e)
                 {
-                    Plugin.Log.LogError($"Error parsing config for item{itemName}: {nameRarityPlanetConfig.Value} - {e.Message}");
+                    Plugin.Log.LogError($"Error parsing config for LLL item{itemName}: {nameRarityPlanetConfig.Value} - {e.Message}\n{e.StackTrace}");
                 }
             }
         }

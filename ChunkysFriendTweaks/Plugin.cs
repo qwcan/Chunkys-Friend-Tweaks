@@ -27,7 +27,7 @@ public class Plugin : BaseUnityPlugin
         var blacklist = Config.Bind("General", 
             "Blacklist Item Names", 
             "123",
-            "Comma separated list of names of items to add to the blacklist. Blacklisted items will be skipped when being registered with LethalLib or LethalLevelLoader.");
+            "Comma separated list of names of items to add to the blacklist. Blacklisted items will be skipped when being registered with LethalLib or LethalLevelLoader. Use with care.");
         foreach (var item in blacklist.Value.Split(','))
         {
             BlacklistedItems.Add(item.Trim());
@@ -52,5 +52,19 @@ public class Plugin : BaseUnityPlugin
     {
         _harmony.PatchAll(typeof(LLLPatch));
         _harmony.PatchAll(typeof(LethalLibPatch));
+    }
+    
+    
+    //Makes names safe for config file
+    public static string SafeName(string name)
+    {
+        char[] invalidConfigChars = { '=', '\n', '\t', '\\', '"', '\'', '[', ']' };
+        
+        foreach (char invalidChar in invalidConfigChars)
+        {
+            name = name.Replace(invalidChar, '_');
+        }
+
+        return name;
     }
 }
