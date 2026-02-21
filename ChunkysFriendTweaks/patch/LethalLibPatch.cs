@@ -67,7 +67,7 @@ public class LethalLibPatch
     
     private static bool MatchesBlacklist(Item spawnableItem)
     {
-        if (Plugin.BlacklistedItems.Contains(spawnableItem.itemName))
+        if (Plugin.BlacklistedItems.Contains(Plugin.SafeName(spawnableItem.itemName)))
         {
             Plugin.Log.LogInfo($"Item {spawnableItem.itemName} is blacklisted, not registering.");
             return true;
@@ -81,7 +81,7 @@ public class LethalLibPatch
         var nameRarityPlanetConfig = Plugin.Instance.Config.Bind("ScrapSpawnWeights", 
             $"{safeName} Custom Level Weights", 
             $"{(levelRarities == null ? "" : string.Join(",", levelRarities.Select( pair => nameof(pair.Key) + ":" + pair.Value)))}",
-            "A comma-separated list of custom level names and scrap spawn weights for this item. For example, Experimentation:10,Vow:20 will make the item spawn twice as often on Experimentation as on Vow.");
+            "A comma-separated list of custom level names and scrap spawn weights for this item. For example, Experimentation:10,Vow:20 will make the item spawn twice as often on Experimentation as on Vow. A blank value will use the mod's default settings");
 
         if( levelRarities == null ) return levelRarities;
         if (!string.IsNullOrEmpty(nameRarityPlanetConfig.Value))
@@ -111,7 +111,7 @@ public class LethalLibPatch
         var nameRarityPlanetConfig = Plugin.Instance.Config.Bind("ScrapSpawnWeights", 
             $"{safeName} LevelType Weights", 
             $"{(levelRarities == null ? "" : string.Join(",", levelRarities.Select( pair => pair.Key + ":" + pair.Value)))}",
-            "A comma-separated list of level names and scrap spawn weights for this item. For example, AssuranceLevel:10,Modded:20 will make the item spawn twice as often on Assurance as on Modded levels.");
+            "A comma-separated list of level names and scrap spawn weights for this item. For example, AssuranceLevel:10,Modded:20 will make the item spawn twice as often on Assurance as on Modded levels. A blank value will use the mod's default settings");
 
         if( levelRarities == null ) return levelRarities;
         if (!string.IsNullOrEmpty(nameRarityPlanetConfig.Value))
@@ -143,7 +143,7 @@ public class LethalLibPatch
         var values = Plugin.Instance.Config.Bind("ScrapValues", 
             $"{safeName} Scrap Values", 
             $"{spawnableItem.minValue},{spawnableItem.maxValue}",
-            "The minimum and maximum scrap values for this item, separated by a comma. Lethal Company multiplies all scrap values by 0.4, so a value of 50,100 would mean the item can be worth between 20 and 40.");
+            "The minimum and maximum scrap values for this item, separated by a comma. Lethal Company multiplies all scrap values by 0.4, so a value of 50,100 would mean the item can be worth between 20 and 40. A blank value will use the mod's default settings");
         if (string.IsNullOrEmpty(values.Value)) return spawnableItem;
         try
         {

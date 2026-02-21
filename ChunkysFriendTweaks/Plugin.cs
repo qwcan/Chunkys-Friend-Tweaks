@@ -25,9 +25,12 @@ public class Plugin : BaseUnityPlugin
     {
         Instance = this;
         var blacklist = Config.Bind("General", 
-            "Blacklist Item Names", 
-            "123",
-            "Comma separated list of names of items to add to the blacklist. Blacklisted items will be skipped when being registered with LethalLib or LethalLevelLoader. Use with care.");
+            "Blacklisted Item Names", 
+            "",
+            "Comma separated list of names of items to add to the blacklist. Blacklisted items will be skipped when " +
+            "being registered with LethalLib or LethalLevelLoader. The item names must match exactly. Use with caution, " +
+            "as a mod trying to directly spawn a blacklisted item may cause problems. If you don't want an item to spawn " +
+            "naturally, just set the spawn weights to zero instead.");
         foreach (var item in blacklist.Value.Split(','))
         {
             BlacklistedItems.Add(item.Trim());
@@ -52,6 +55,7 @@ public class Plugin : BaseUnityPlugin
     {
         _harmony.PatchAll(typeof(LLLPatch));
         _harmony.PatchAll(typeof(LethalLibPatch));
+        _harmony.PatchAll(typeof(NetworkPrefab));
     }
     
     
