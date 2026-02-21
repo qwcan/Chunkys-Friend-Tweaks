@@ -66,7 +66,6 @@ public class LLLPatch
         if (valuesArray == null || valuesArray.Length < 2) return extendedItem;
         extendedItem.Item.minValue = valuesArray[0];
         extendedItem.Item.maxValue = valuesArray[1];
-        Plugin.Log.LogInfo($"Item {safeName} scrap values updated to {extendedItem.Item.minValue} - {extendedItem.Item.maxValue}");
         return extendedItem;
     }
 
