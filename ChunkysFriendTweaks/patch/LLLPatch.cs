@@ -90,8 +90,6 @@ public class LLLPatch
             "A comma-separated list of current weather and scrap spawn weights for this item. For example, Rainy:100 will make the item spawn with a weight of 100 when the current weather is Rainy. A blank value will use the mod's default settings");
        
         //TODO dungeon weights
-        
-        Plugin.Log.LogInfo( $"Item {safeName} has {extendedItem.LevelMatchingProperties.planetNames.Count} planet weights: {string.Join(",", extendedItem.LevelMatchingProperties.planetNames.Select(planet => planet.Rarity))}");
         return extendedItem;
     }
     
