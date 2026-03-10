@@ -1,0 +1,11 @@
+{
+    "name": "ChunkysFriendTweaks",
+    "version_number": "1.1.0",
+    "website_url": "https://github.com/qwcan/Chunkys-Friend-Tweaks",
+    "description": "Tweaks to LethalLib and LethalLevelLoader for my friend group. Allows for blacklisting scrap or tweaking their rarities and values.",
+    "dependencies": [
+		"BepInEx-BepInExPack-5.4.2100",
+		"IAmBatby-LethalLevelLoader-1.6.8",
+		"Evaisa-LethalLib-1.1.1"
+	]
+}

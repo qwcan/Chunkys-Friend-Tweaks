@@ -7,7 +7,7 @@ using ChunkysFriendTweaks.patch;
 namespace ChunkysFriendTweaks;
 
 // 111 is in front of the GUID so that it is (hopefully) loaded before any mods that use LethalLib, as RegisterScrap needs to be patched before anything uses it. 
-[BepInPlugin(PluginInfo.GUID, "ChunkysFriendTweaks", "1.0.0")]
+[BepInPlugin(PluginInfo.GUID, "ChunkysFriendTweaks", "1.1.0")]
 [BepInDependency("evaisa.lethallib")]
 [BepInDependency("imabatby.lethallevelloader")]
 public class Plugin : BaseUnityPlugin

@@ -81,7 +81,7 @@ public class LethalLibPatch
         var nameRarityPlanetConfig = Plugin.Instance.Config.Bind("ScrapSpawnWeights", 
             $"{safeName} Custom Level Weights", 
             $"{(levelRarities == null ? "" : string.Join(",", levelRarities.Select( pair => nameof(pair.Key) + ":" + pair.Value)))}",
-            "A comma-separated list of custom level names and scrap spawn weights for this item. For example, Experimentation:10,Vow:20 will make the item spawn twice as often on Experimentation as on Vow. A blank value will use the mod's default settings");
+            "A comma-separated list of custom level names and scrap spawn weights for this item. For example, Experimentation:10,Vow:20 will make the item spawn twice as often on Vow as on Experimentation. A blank value will use the mod's default settings");
 
         if( levelRarities == null ) return levelRarities;
         if (!string.IsNullOrEmpty(nameRarityPlanetConfig.Value))
@@ -111,7 +111,7 @@ public class LethalLibPatch
         var nameRarityPlanetConfig = Plugin.Instance.Config.Bind("ScrapSpawnWeights", 
             $"{safeName} LevelType Weights", 
             $"{(levelRarities == null ? "" : string.Join(",", levelRarities.Select( pair => pair.Key + ":" + pair.Value)))}",
-            "A comma-separated list of level names and scrap spawn weights for this item. For example, AssuranceLevel:10,Modded:20 will make the item spawn twice as often on Assurance as on Modded levels. A blank value will use the mod's default settings");
+            "A comma-separated list of level names and scrap spawn weights for this item. For example, AssuranceLevel:10,Modded:20 will make the item spawn twice as often on Modded levels as on Assurance. A blank value will use the mod's default settings");
 
         if( levelRarities == null ) return levelRarities;
         if (!string.IsNullOrEmpty(nameRarityPlanetConfig.Value))
