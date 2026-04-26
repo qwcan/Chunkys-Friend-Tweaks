@@ -1,6 +1,6 @@
 {
     "name": "ChunkysFriendTweaks",
-    "version_number": "1.1.0",
+    "version_number": "1.2.0",
     "website_url": "https://github.com/qwcan/Chunkys-Friend-Tweaks",
     "description": "Tweaks to LethalLib and LethalLevelLoader for my friend group. Allows for blacklisting scrap or tweaking their rarities and values.",
     "dependencies": [

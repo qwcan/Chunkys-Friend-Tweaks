@@ -17,6 +17,7 @@ public class LLLPatch
     {
         if (__instance.ModName == "LethalCompany" || __instance.AuthorName == "Zeekerss")
         {
+            Plugin.Log.LogInfo($"Skipping default item {extendedItem.name}");
             //Skip vanilla stuff. ContentType isn't set here for some reason.
             return true;
         }
@@ -38,7 +39,117 @@ public class LLLPatch
         return true;
     }
 
+    
+    
+    [HarmonyPatch(typeof(ExtendedMod), "RegisterExtendedContent", new[] { typeof(ExtendedDungeonFlow) })]
+    [HarmonyPrefix]
+    public static bool RegisterExtendedContentInteriorPatch(ref ExtendedMod __instance, ref ExtendedDungeonFlow extendedDungeonFlow)
+    {
+        if (__instance.ModName == "LethalCompany" || __instance.AuthorName == "Zeekerss")
+        {
+            Plugin.Log.LogInfo($"Skipping default interior {extendedDungeonFlow.name}");
+            //Skip vanilla stuff. ContentType isn't set here for some reason.
+            return true;
+        }
 
+        Plugin.Log.LogInfo($"Updating values for interior {extendedDungeonFlow.name}");
+        extendedDungeonFlow = UpdateInterior(extendedDungeonFlow);
+        return true;
+    }
+    
+    
+    [HarmonyPatch(typeof(ExtendedMod), "RegisterExtendedContent", new[] { typeof(ExtendedLevel) })]
+    [HarmonyPrefix]
+    public static bool RegisterExtendedContentMoonPatch(ref ExtendedMod __instance, ref ExtendedLevel extendedLevel)
+    {
+        if (__instance.ModName == "LethalCompany" || __instance.AuthorName == "Zeekerss")
+        {
+            Plugin.Log.LogInfo($"Skipping default moon {extendedLevel.name}");
+            //Skip vanilla stuff. ContentType isn't set here for some reason.
+            return true;
+        }
+
+        Plugin.Log.LogInfo($"Updating values for level {extendedLevel.name}");
+        extendedLevel = UpdateLevel(extendedLevel);
+        return true;
+    }
+
+
+    private static ExtendedDungeonFlow UpdateInterior(ExtendedDungeonFlow extendedDungeonFlow)
+    {
+        string safeName = Plugin.SafeName(extendedDungeonFlow.name);
+
+        double max, min;
+        bool isObsoleteConfig = false;
+        if (extendedDungeonFlow.dungeonSizeMax != 1.0 || extendedDungeonFlow.dungeonSizeMin != 1.0)
+        {
+            Plugin.Log.LogInfo($"Using obsolete config values for LLL interior {safeName}: {extendedDungeonFlow.dungeonSizeMin} / {extendedDungeonFlow.dungeonSizeMax}.");
+            //Obsolete config values, but we can still override them
+            max = extendedDungeonFlow.dungeonSizeMax;
+            min = extendedDungeonFlow.dungeonSizeMin;
+            isObsoleteConfig = true;
+        }
+        else
+        {
+            max = extendedDungeonFlow.DynamicDungeonSizeMax;
+            min = extendedDungeonFlow.DynamicDungeonSizeMin;
+        }
+        
+        var valueMin = Plugin.Instance.Config.Bind("Interiors",
+            $"{safeName} Minimum Interior Size",
+            $"{min}",
+            "The minimum interior size multiplier for this interior.");
+        var valueMax = Plugin.Instance.Config.Bind("Interiors",
+            $"{safeName} Maximum Interior Size",
+            $"{max}",
+            "The maximum interior size multiplier for this moon.");
+
+        
+        if (string.IsNullOrEmpty(valueMin.Value) && string.IsNullOrEmpty(valueMax.Value)) return extendedDungeonFlow;
+        try
+        {
+            if (isObsoleteConfig)
+            {
+                extendedDungeonFlow.dungeonSizeMax = float.Parse(valueMin.Value);
+                extendedDungeonFlow.dungeonSizeMin = float.Parse(valueMax.Value);
+            }
+            else
+            {
+                extendedDungeonFlow.DynamicDungeonSizeMinMax = new Vector2(float.Parse(valueMin.Value), float.Parse(valueMax.Value) );
+            }
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError($"Error parsing config for LLL interior {safeName}: {valueMin.Value} / {valueMax.Value} - {e.Message}\n{e.StackTrace}");
+            return extendedDungeonFlow;
+        }
+        
+        return extendedDungeonFlow;
+    }
+    
+    private static ExtendedLevel UpdateLevel(ExtendedLevel extendedLevel)
+    {
+        string safeName = Plugin.SafeName(extendedLevel.name);
+        var value = Plugin.Instance.Config.Bind("Moons",
+            $"{safeName} Interior Size",
+            $"{extendedLevel.SelectableLevel.factorySizeMultiplier}",
+            "The interior size multiplier for this moon.");
+
+        if (string.IsNullOrEmpty(value.Value)) return extendedLevel;
+        try
+        {
+            extendedLevel.SelectableLevel.factorySizeMultiplier = float.Parse(value.Value);
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError($"Error parsing config for LLL level {safeName}: {value.Value} - {e.Message}\n{e.StackTrace}");
+            return extendedLevel;
+        }
+        return extendedLevel;
+    }
+    
+    
+    
     private static bool MatchesBlacklist(ExtendedItem extendedItem)
     {
         string safeName = Plugin.SafeName(extendedItem.name);
@@ -66,10 +177,18 @@ public class LLLPatch
             "The minimum and maximum scrap values for this item, separated by a comma. Lethal Company multiplies all scrap values by 0.4, so a value of 50,100 would mean the item can be worth between 20 and 40.");
 
         if (string.IsNullOrEmpty(values.Value)) return extendedItem;
-        var valuesArray = values.Value.Split(',')?.Select(int.Parse).ToArray();
-        if (valuesArray == null || valuesArray.Length < 2) return extendedItem;
-        extendedItem.Item.minValue = valuesArray[0];
-        extendedItem.Item.maxValue = valuesArray[1];
+        try
+        {
+            var valuesArray = values.Value.Split(',')?.Select(int.Parse).ToArray();
+            if (valuesArray == null || valuesArray.Length < 2) return extendedItem;
+            extendedItem.Item.minValue = valuesArray[0];
+            extendedItem.Item.maxValue = valuesArray[1];
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError($"Error parsing config for LLL item {safeName}: {values.Value} - {e.Message}\n{e.StackTrace}");
+            return extendedItem;
+        }
         return extendedItem;
     }
 

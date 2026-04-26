@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.0
+- Added support for modifying LLL interior and moon sizes
+
 ## 1.1.0
 - Fixed config description typos
 - LLL planet names now allow vanilla planet names without numbers (e.g. "Artifice" instead of "68 Artifice")
